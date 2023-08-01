@@ -1,0 +1,62 @@
+version: "3.5"
+services:
+
+  gateway:
+    image: ghcr.io/protomesh/protomesh/protomesh:v0.2.0-rc.23
+    restart: always
+    command: protomesh -config-file /var/protomesh/gateway.toml
+    env_file:
+      - .env
+    volumes:
+      # Mount /var/run so we can access docker.sock and talk to Docker
+      - /var/run:/var/run
+      # Mount the shared configuration directory, used by the AWS CLI and AWS SDKs
+      # On Windows, this directory can be found at "%UserProfile%\.aws"
+      - $HOME/.aws/:/home/.aws/
+      # Configuration file
+      - ${PWD}/gateway.toml:/var/protomesh/gateway.toml
+    environment:
+      # define the home folder; credentials will be read from $HOME/.aws
+      HOME: "/home"
+    networks:
+      - demo
+    ports:
+      - 4000:4000
+      - 5770:5770
+    depends_on:
+      - store
+
+  store:
+    image: ghcr.io/protomesh/protomesh/protomesh:v0.2.0-rc.23
+    build:
+      context: .
+      dockerfile: Containerfile
+    restart: always
+    command: protomesh -config-file /var/protomesh/store.toml
+    env_file:
+      - .env
+    volumes:
+      - ${PWD}/store.toml:/var/protomesh/store.toml
+    networks:
+      - demo
+    ports:
+      - 6680:6680
+    depends_on:
+      - postgresql
+
+  postgresql:
+    environment:
+      POSTGRES_PASSWORD: protomesh
+      POSTGRES_USER: protomesh
+    image: postgres:${POSTGRESQL_VERSION}
+    networks:
+      - demo
+    ports:
+      - 5432:5432
+    volumes:
+      - /var/lib/postgresql/data
+
+networks:
+  demo:
+    driver: bridge
+    name: demo

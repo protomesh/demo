@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package petstore;
+
+import "google/protobuf/empty.proto";
+
+message Pet {
+    string id = 1;
+    PetType type = 2;
+    string name = 3;
+    int64 age = 4;
+
+    map<string, string> attributes = 5;
+    
+    enum PetType {
+        PET_TYPE_UNKNOWN = 0;
+        PET_TYPE_DOG = 1;
+        PET_TYPE_CAT = 2;
+    }
+    
+}
+
+service PetStoreService {
+    rpc Register(Pet) returns (Pet) {};
+    rpc List(google.protobuf.Empty) returns (stream Pet) {};
+}

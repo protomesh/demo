@@ -1,0 +1,42 @@
+enable.store = true
+
+enable.proxy = false
+enable.worker = false
+enable.envoy.xds = false
+
+[log]
+
+dev = true
+json = false
+level = "debug"
+
+[grpc]
+
+server.enable.reflection = true
+
+[http]
+
+server.shutdown.timeout.duration = "2m"
+
+[http.server.tls]
+
+# certificate.certificates.path = ""
+# certificate.private.key.path = ""
+# insecure.skip.verify = true
+# root.cas.path = ""
+
+listener.address = "0.0.0.0:6680"
+protocol = "tcp"
+
+[store]
+provider = "postgres"
+
+[store.sql]
+
+driver.name = "postgres"
+connection.string = "host=postgresql port=5432 user=protomesh password=protomesh dbname=protomesh sslmode=disable"
+
+[store.postgres]
+
+migration.file = "/var/protomesh/postgres/schema"
+watch.interval = "30s"

@@ -1,0 +1,43 @@
+enable.gateway = true
+
+enable.store = false
+enable.worker = false
+enable.envoy.xds = false
+
+[log]
+
+dev = true
+json = false
+level = "debug"
+
+[grpc]
+
+server.enable.reflection = true
+
+[http]
+
+server.shutdown.timeout.duration = "2m"
+
+[http.server.tls]
+
+# certificate.certificates.path = ""
+# certificate.private.key.path = ""
+# insecure.skip.verify = true
+# root.cas.path = ""
+
+listener.address = "0.0.0.0:5770"
+protocol = "tcp"
+
+[gateway]
+
+handlers = "AwsLambda"
+
+[gateway.service]
+
+resource.store.namespace = "gateway"
+
+[gateway.resource.store]
+
+client.certificate.path = ""
+client.enable.tls = true
+server.address = "store:6680"

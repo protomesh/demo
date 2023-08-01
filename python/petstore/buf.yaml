@@ -1,0 +1,10 @@
+version: v1
+name: buf.build/protomesh/petstore
+deps:
+   - buf.build/googleapis/googleapis:75b4300737fb4efca0831636be94e517
+breaking:
+  use:
+    - FILE
+lint:
+  use:
+    - DEFAULT
